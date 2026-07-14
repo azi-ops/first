@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basketball Scoreboard</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@800&family=Orbitron:wght@700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* Base Page Styles */
+        body {
+            background-color: #d1e2d3;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .scoreboard {
+            background-color: #0b1a3a;
+            /* Deep navy blue background */
+            border-radius: 12px;
+            padding: 40px 50px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            display: flex;
+            gap: 80px;
+            /* Space between Home and Guest sections */
+            border: 4px solid #ffffff;
+            /* Subtle white border outline */
+        }
+
+        .team-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 200px;
+        }
+
+        .team-title {
+            color: #ffffff;
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .score-display {
+            background-color: #000000;
+            /* Pitch black display screen */
+            width: 100%;
+            height: 150px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 25px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+        }
+
+
+        .score-value {
+            font-family: 'Orbitron', monospace;
+            color: #f94f6d;
+            /* Vibrant LED pink/red */
+            font-size: 85px;
+            text-shadow: 0 0 15px rgba(249, 79, 109, 0.6);
+            user-select: none;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .score-btn {
+            background: transparent;
+            border: 2px solid #9aabd5;
+            color: #9aabd5;
+            font-family: 'Orbitron', monospace;
+            */ font-size: 16px;
+            font-weight: bold;
+            width: 50px;
+            height: 40px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+
+        .score-btn:hover {
+            color: #ffffff;
+            border-color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .score-btn:active {
+            transform: scale(0.95);
+        }
+
+        .controls-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        .reset-btn {
+            background-color: #f94f6d;
+            border: none;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(249, 79, 109, 0.3);
+            transition: all 0.2s ease-in-out;
+        }
+
+        .reset-btn:hover {
+            background-color: #ff6680;
+            box-shadow: 0 6px 15px rgba(249, 79, 109, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .reset-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(249, 79, 109, 0.3);
+        }
+
+
+        .save-btn {
+            background-color: #2e62d9;
+            box-shadow: 0 4px 10px rgba(46, 98, 217, 0.3);
+        }
+
+        .save-btn:hover {
+            background-color: #4a7cf5;
+            box-shadow: 0 6px 15px rgba(46, 98, 217, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <div class="scoreboard">
+
+            <div class="team-container">
+                <h2 class="team-title">Home</h2>
+                <div class="score-display">
+                    <span class="score-value" id="home-score">0</span>
+                </div>
+                <div class="button-group">
+                    <button class="score-btn" onclick="addOneHome()">+1</button>
+                    <button class="score-btn" onclick="addTwoHome()">+2</button>
+                    <button class="score-btn" onclick="addThreeHome()">+3</button>
+                </div>
+            </div>
+            <div class="team-container">
+                <h2 class="team-title">Guest</h2>
+                <div class="score-display">
+                    <span class="score-value" id="guest-score">0</span>
+                </div>
+                <div class="button-group">
+                    <button class="score-btn" onclick="addOneGuest()">+1</button>
+                    <button class="score-btn" onclick="addTwoGuest()">+2</button>
+                    <button class="score-btn" onclick="addThreeGuest()">+3</button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="controls-group">
+            <button class="reset-btn" onclick="reset()">Reset Game</button>
+            <button class="reset-btn save-btn" onclick="save()">Save Game</button>
+        </div>
+    </div>
+
+    <script>
+        // 1. We separated the score trackers into two distinct variables
+        let homeCount = 0;
+        let guestCount = 0;
+
+        // Target the DOM elements once at the top
+        let homeScoreElement = document.querySelector("#home-score");
+        let guestScoreElement = document.querySelector("#guest-score");
+        function addOneHome() {
+            homeCount = homeCount + 1
+            homeScoreElement.innerHTML = homeCount
+        }
+        function addTwoHome() {
+            homeCount = homeCount + 2
+            homeScoreElement.innerHTML = homeCount
+        }
+        function addThreeHome() {
+            homeCount = homeCount + 3
+            homeScoreElement.innerHTML = homeCount
+        }
+        function addOneGuest() {
+            guestCount = guestCount + 1
+            guestScoreElement.innerHTML = guestCount
+        }
+        function addTwoGuest() {
+            guestCount = guestCount + 2
+            guestScoreElement.innerHTML = guestCount
+        }
+        function addThreeGuest() {
+            guestCount = guestCount + 3
+            guestScoreElement.innerHTML = guestCount
+        }
+        function reset() {
+            homeCount = 0
+            guestCount = 0
+            homeScoreElement.innerHTML = homeCount
+            guestScoreElement.innerHTML = guestCount
+        }
+        function save() {
+            if (homeCount > guestCount) {
+                alert("Home is the winner!");
+            } else if (homeCount === guestCount) {
+                alert("Equal Score! It's a tie.");
+            } else {
+                alert("Guest wins!");
+            }
+        }
+    </script>
+</body>
+
+</html>
